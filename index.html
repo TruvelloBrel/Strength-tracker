@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strength Tracker Pro</title>
+    <title>Strength Trainer Pro v2</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <style>
         :root {
@@ -40,7 +40,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
             background: var(--surface);
@@ -87,7 +86,6 @@
             border-left-color: var(--primary);
         }
 
-        /* Main Content */
         .main {
             margin-left: 250px;
             flex: 1;
@@ -141,30 +139,14 @@
             border: 1px solid var(--border);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
         .btn-danger {
             background: var(--danger);
             color: white;
         }
 
-        .btn-danger:hover {
-            background: #ff3838;
-        }
-
-        /* Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 30px;
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
         }
 
         .card {
@@ -173,6 +155,7 @@
             border-radius: 12px;
             padding: 20px;
             transition: var(--transition);
+            margin-bottom: 20px;
         }
 
         .card:hover {
@@ -191,10 +174,6 @@
             font-size: 16px;
             font-weight: 600;
             color: var(--primary);
-        }
-
-        .table-container {
-            overflow-x: auto;
         }
 
         table {
@@ -217,10 +196,6 @@
             border-bottom: 1px solid var(--border);
         }
 
-        tr:hover {
-            background: rgba(0, 212, 255, 0.03);
-        }
-
         input[type="text"],
         input[type="number"],
         select {
@@ -234,31 +209,12 @@
             font-family: inherit;
         }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
         }
 
-        /* Status Colors */
-        .status-excellent {
-            background: rgba(46, 213, 115, 0.2);
-            color: var(--success);
-        }
-
-        .status-good {
-            background: rgba(255, 165, 2, 0.2);
-            color: var(--warning);
-        }
-
-        .status-poor {
-            background: rgba(255, 71, 87, 0.2);
-            color: var(--danger);
-        }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -281,8 +237,10 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
             animation: slideIn 0.3s ease-out;
         }
 
@@ -320,11 +278,74 @@
             margin-top: 24px;
         }
 
-        /* Charts */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-bottom: 20px;
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .difficulty-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .difficulty-btn.easy {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .difficulty-btn.easy.active {
+            background: var(--success);
+            color: var(--dark-bg);
+        }
+
+        .difficulty-btn.normal {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .difficulty-btn.normal.active {
+            background: var(--warning);
+            color: var(--dark-bg);
+        }
+
+        .difficulty-btn.hard {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .difficulty-btn.hard.active {
+            background: var(--danger);
+            color: white;
+        }
+
+        .exercise-card {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
 
         .progress-badge {
@@ -335,11 +356,35 @@
             font-weight: 600;
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
+        .status-excellent {
+            background: rgba(46, 213, 115, 0.2);
+            color: var(--success);
+        }
+
+        .status-good {
+            background: rgba(255, 165, 2, 0.2);
+            color: var(--warning);
+        }
+
+        .status-poor {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--danger);
+        }
+
+        .weight-upgrade-alert {
+            background: rgba(46, 213, 115, 0.2);
+            border: 2px solid var(--success);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
         @media (max-width: 768px) {
@@ -347,78 +392,12 @@
                 width: 0;
                 transform: translateX(-100%);
             }
-
             .main {
                 margin-left: 0;
-                padding: 20px;
             }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
+            .grid-2 {
+                grid-template-columns: 1fr;
             }
-
-            .header-actions {
-                width: 100%;
-            }
-
-            .header-actions .btn {
-                flex: 1;
-                justify-content: center;
-            }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .progress-info {
-            background: rgba(0, 212, 255, 0.05);
-            border-left: 3px solid var(--primary);
-            padding: 12px;
-            border-radius: 4px;
-            margin: 12px 0;
-            font-size: 12px;
-        }
-
-        .tab-container {
-            display: flex;
-            gap: 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: var(--text-secondary);
-            border-bottom: 2px solid transparent;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
         }
     </style>
 </head>
@@ -427,15 +406,13 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    💪 StrengthTracker
-                </div>
+                <div class="logo">💪 StrengthTrainer v2</div>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item active" data-tab="dashboard">📊 Панель управления</li>
-                <li class="nav-item" data-tab="workouts">🏋️ Тренировки</li>
+                <li class="nav-item active" data-tab="dashboard">📊 Панель</li>
+                <li class="nav-item" data-tab="templates">🏋️ Мои тренировки</li>
+                <li class="nav-item" data-tab="session">▶️ Начать сессию</li>
                 <li class="nav-item" data-tab="progress">📈 Прогресс</li>
-                <li class="nav-item" data-tab="guide">📖 Гайд</li>
             </ul>
         </div>
 
@@ -446,110 +423,53 @@
                 <div class="header">
                     <div>
                         <h1>Панель управления</h1>
-                        <p style="color: var(--text-secondary); margin-top: 4px;">Отслеживайте свой прогресс в силовых тренировках</p>
-                    </div>
-                    <div class="header-actions">
-                        <button class="btn btn-primary" onclick="openAddWorkoutModal()">+ Новая тренировка</button>
+                        <p style="color: var(--text-secondary); margin-top: 4px;">Отслеживайте свой прогресс</p>
                     </div>
                 </div>
 
-                <div class="content-grid">
-                    <!-- Stats Cards -->
+                <div class="grid-2">
                     <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">📊 Статистика</div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Всего тренировок</div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--primary);" id="totalWorkouts">0</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Упражнений добавлено</div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--success);" id="totalExercises">0</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Общий объём (кг)</div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--warning);" id="totalVolume">0</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Готовы к повышению</div>
-                                <div style="font-size: 24px; font-weight: 700; color: var(--danger);" id="readyToProgress">0</div>
-                            </div>
-                        </div>
+                        <div class="card-title">📋 Шаблонов тренировок</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--primary); margin-top: 12px;" id="totalTemplates">0</div>
                     </div>
-
-                    <!-- Recent Workouts -->
                     <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">📅 Последние тренировки</div>
-                        </div>
-                        <div id="recentWorkouts" style="font-size: 13px;">
-                            <div class="empty-state-icon">📋</div>
-                            <p class="empty-state">Нет данных. Добавьте первую тренировку!</p>
-                        </div>
+                        <div class="card-title">✅ Всего сессий</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--success); margin-top: 12px;" id="totalSessions">0</div>
                     </div>
                 </div>
 
-                <!-- Latest Workout Table -->
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Сегодняшняя тренировка</div>
-                        <button class="btn btn-primary btn-small" onclick="openAddWorkoutModal()">Начать</button>
-                    </div>
-                    <div id="todayWorkoutTable" class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Упражнение</th>
-                                    <th>Вес (кг)</th>
-                                    <th>Подходы</th>
-                                    <th>Повторения</th>
-                                    <th>Статус</th>
-                                    <th>Действие</th>
-                                </tr>
-                            </thead>
-                            <tbody id="todayTableBody">
-                                <tr>
-                                    <td colspan="6" class="empty-state">Добавьте упражнение для начала тренировки</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-title">🎯 Готовы к повышению веса</div>
+                    <div id="readyForUpgrade" style="margin-top: 12px;">
+                        <p style="color: var(--text-secondary);">Добавьте сессии для анализа</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Workouts Tab -->
-            <div id="workouts" class="tab-content">
+            <!-- Templates Tab -->
+            <div id="templates" class="tab-content">
                 <div class="header">
-                    <h1>Мои тренировки</h1>
-                    <div class="header-actions">
-                        <button class="btn btn-primary" onclick="openAddWorkoutModal()">+ Добавить упражнение</button>
-                    </div>
+                    <h1>Мои шаблоны тренировок</h1>
+                    <button class="btn btn-primary" onclick="openCreateTemplateModal()">+ Новый шаблон</button>
+                </div>
+
+                <div id="templatesList"></div>
+            </div>
+
+            <!-- Session Tab -->
+            <div id="session" class="tab-content">
+                <div class="header">
+                    <h1>Начать новую сессию</h1>
                 </div>
 
                 <div class="card">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Дата</th>
-                                    <th>Упражнение</th>
-                                    <th>Вес</th>
-                                    <th>Подходы x Повторения</th>
-                                    <th>Объём</th>
-                                    <th>Статус</th>
-                                    <th>🎯 Прогресс</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="allWorkoutsBody">
-                                <tr>
-                                    <td colspan="8" class="empty-state">Тренировок не найдено</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="form-group">
+                        <label>Выберите тренировку из шаблона:</label>
+                        <select id="sessionTemplateSelect" onchange="loadTemplateForSession()">
+                            <option value="">-- Выберите тренировку --</option>
+                        </select>
                     </div>
+                    <div id="sessionContent"></div>
                 </div>
             </div>
 
@@ -560,144 +480,62 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Выберите упражнение для анализа</div>
-                    </div>
-                    <select id="exerciseSelect" onchange="updateProgressChart()" style="width: 100%; margin-bottom: 20px;">
+                    <div class="card-title">Выберите упражнение для анализа</div>
+                    <select id="progressExerciseSelect" onchange="updateProgressChart()" style="width: 100%; margin: 16px 0;">
                         <option value="">-- Выберите упражнение --</option>
                     </select>
-                    <div class="chart-container">
+                    <div style="position: relative; height: 300px;">
                         <canvas id="progressChart"></canvas>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Статистика по упражнениям</div>
-                    </div>
-                    <div id="exerciseStats">
-                        <div class="empty-state">Нет данных для анализа</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Guide Tab -->
-            <div id="guide" class="tab-content">
-                <div class="header">
-                    <h1>📖 Гайд по использованию</h1>
-                </div>
-
-                <div class="card">
-                    <div class="card-title" style="margin-bottom: 16px;">1️⃣ Основные концепции</div>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Стандартная норма:</strong> 3 подхода по 12 повторений — это ваша целевая схема для каждого упражнения.
-                    </p>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Система цветовой маркировки:</strong>
-                    </p>
-                    <div style="margin-left: 16px; margin-bottom: 16px;">
-                        <div class="progress-badge status-excellent" style="margin-bottom: 8px;">✅ Зелёный (3x12+) — норма достигнута или превышена</div>
-                        <div class="progress-badge status-good" style="margin-bottom: 8px;">⚠️ Жёлтый (2x12+) — близко к норме, но меньше подходов</div>
-                        <div class="progress-badge status-poor">❌ Красный (менее 2x12) — нужно работать над этим</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title" style="margin-bottom: 16px;">2️⃣ Модель двойной прогрессии</div>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Как это работает:</strong>
-                    </p>
-                    <ol style="margin-left: 20px; line-height: 2;">
-                        <li>Сначала вы увеличиваете количество повторений (до 12 в подходе)</li>
-                        <li>Когда достигаете 3x12+ (или даже 3x15), повышаете вес на следующую тренировку</li>
-                        <li>После повышения веса количество повторений может упасть (например, до 3x8)</li>
-                        <li>Затем снова повышаете повторения, пока не достигнете 3x12+ с новым весом</li>
-                    </ol>
-                </div>
-
-                <div class="card">
-                    <div class="card-title" style="margin-bottom: 16px;">3️⃣ Как использовать приложение</div>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Шаг 1: Добавьте упражнение</strong> — Нажмите «Новая тренировка» и заполните название, вес, подходы и повторения.
-                    </p>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Шаг 2: Заполняйте данные после каждой тренировки</strong> — Добавляйте реальные результаты, которые вы достигли.
-                    </p>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Шаг 3: Смотрите статус</strong> — Система автоматически покажет вам, готовы ли вы к повышению веса.
-                    </p>
-                    <p style="margin-bottom: 12px; line-height: 1.8;">
-                        <strong>Шаг 4: Анализируйте прогресс</strong> — Используйте вкладку «Прогресс» для просмотра графиков роста веса и объёма.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="card-title" style="margin-bottom: 16px;">4️⃣ Интерпретация данных</div>
-                    <div class="progress-info">
-                        <strong>🟢 Готовы повышать вес:</strong> Если вы сделали 3x12+ в третьем подходе (особенно 3x15), пора переходить на больший вес на следующей тренировке.
-                    </div>
-                    <div class="progress-info">
-                        <strong>🟡 Работаете на форму:</strong> Если повторения меньше, но техника хорошая, это нормально. Прогрессируйте медленнее.
-                    </div>
-                    <div class="progress-info">
-                        <strong>🔴 Переутомление:</strong> Если качество упадёт резко, возьмите день отдыха или снизьте объём.
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title" style="margin-bottom: 16px;">5️⃣ Советы для успеха</div>
-                    <ul style="margin-left: 20px; line-height: 2;">
-                        <li>✅ Записывайте свои результаты сразу после тренировки</li>
-                        <li>✅ Старайтесь следовать норме 3x12, но допускайте небольшие отклонения</li>
-                        <li>✅ Повышайте вес на 2.5-5 кг, когда готовы (в зависимости от упражнения)</li>
-                        <li>✅ Отдыхайте между подходами 60-90 секунд для работы на массу</li>
-                        <li>✅ Следите за прогрессом в графиках — они вас мотивируют!</li>
-                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Workout Modal -->
-    <div id="addWorkoutModal" class="modal">
+    <!-- Create Template Modal -->
+    <div id="createTemplateModal" class="modal">
         <div class="modal-content">
-            <h2>Добавить упражнение</h2>
+            <h2>Создать новый шаблон тренировки</h2>
             <div class="form-group">
-                <label>Название упражнения</label>
-                <input type="text" id="exerciseName" placeholder="Например: Жим лежа">
+                <label>Название тренировки</label>
+                <input type="text" id="templateName" placeholder="Например: Спина и бицепс">
             </div>
-            <div class="form-group">
-                <label>Вес (кг)</label>
-                <input type="number" id="exerciseWeight" placeholder="60" step="0.5">
+            <div id="templateExercisesContainer"></div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 12px;" onclick="addExerciseToTemplate()">+ Добавить упражнение</button>
+            <div class="form-actions">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeCreateTemplateModal()">Отмена</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveTemplate()">Сохранить</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Save Session Modal -->
+    <div id="saveSessionModal" class="modal">
+        <div class="modal-content">
+            <h2>Сохранить сессию</h2>
             <div class="form-group">
-                <label>Количество подходов</label>
-                <input type="number" id="exerciseSets" placeholder="3" value="3" min="1" max="10">
-            </div>
-            <div class="form-group">
-                <label>Количество повторений</label>
-                <input type="number" id="exerciseReps" placeholder="12" value="12" min="1" max="50">
-            </div>
-            <div class="form-group">
-                <label>Дата</label>
-                <input type="date" id="workoutDate">
+                <label>Дата тренировки</label>
+                <input type="date" id="sessionDate">
             </div>
             <div class="form-actions">
-                <button class="btn btn-secondary" style="flex: 1;" onclick="closeAddWorkoutModal()">Отмена</button>
-                <button class="btn btn-primary" style="flex: 1;" onclick="addWorkout()">Добавить</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeSaveSessionModal()">Отмена</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveSession()">Сохранить сессию</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize app
-        let workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+        let templates = JSON.parse(localStorage.getItem('templates')) || [];
+        let sessions = JSON.parse(localStorage.getItem('sessions')) || [];
+        let currentTemplateForSession = null;
+        let currentSessionData = {};
 
         function initApp() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('workoutDate').value = today;
             setupNavigation();
             updateDashboard();
+            populateSelects();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('sessionDate').value = today;
         }
 
         function setupNavigation() {
@@ -707,322 +545,335 @@
                     switchTab(tabName);
                 });
             });
-
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.dataset.tab;
-                    switchTab(tabName);
-                });
-            });
         }
 
         function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Show selected tab
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
-            if (tabName === 'progress') {
+            if (tabName === 'templates') {
+                renderTemplates();
+            } else if (tabName === 'progress') {
                 updateProgressTab();
-            } else if (tabName === 'workouts') {
-                updateWorkoutsTable();
             }
-        }
-
-        function openAddWorkoutModal() {
-            document.getElementById('addWorkoutModal').classList.add('active');
-        }
-
-        function closeAddWorkoutModal() {
-            document.getElementById('addWorkoutModal').classList.remove('active');
-        }
-
-        function addWorkout() {
-            const name = document.getElementById('exerciseName').value.trim();
-            const weight = parseFloat(document.getElementById('exerciseWeight').value);
-            const sets = parseInt(document.getElementById('exerciseSets').value);
-            const reps = parseInt(document.getElementById('exerciseReps').value);
-            const date = document.getElementById('workoutDate').value;
-
-            if (!name || !weight || !date) {
-                alert('Заполните все поля');
-                return;
-            }
-
-            const workout = {
-                id: Date.now(),
-                name,
-                weight,
-                sets,
-                reps,
-                date,
-                volume: weight * sets * reps
-            };
-
-            workouts.push(workout);
-            localStorage.setItem('workouts', JSON.stringify(workouts));
-
-            // Clear form
-            document.getElementById('exerciseName').value = '';
-            document.getElementById('exerciseWeight').value = '';
-            document.getElementById('exerciseSets').value = '3';
-            document.getElementById('exerciseReps').value = '12';
-
-            closeAddWorkoutModal();
-            updateDashboard();
-            updateWorkoutsTable();
         }
 
         function updateDashboard() {
-            // Stats
-            document.getElementById('totalWorkouts').textContent = workouts.length;
-            
-            const uniqueExercises = new Set(workouts.map(w => w.name)).size;
-            document.getElementById('totalExercises').textContent = uniqueExercises;
+            document.getElementById('totalTemplates').textContent = templates.length;
+            document.getElementById('totalSessions').textContent = sessions.length;
 
-            const totalVol = workouts.reduce((sum, w) => sum + w.volume, 0);
-            document.getElementById('totalVolume').textContent = totalVol.toFixed(0);
-
-            // Ready to progress
-            let readyCount = 0;
-            const exerciseMap = {};
-            
-            workouts.forEach(w => {
-                if (!exerciseMap[w.name]) {
-                    exerciseMap[w.name] = [];
-                }
-                exerciseMap[w.name].push(w);
-            });
-
-            for (const [name, records] of Object.entries(exerciseMap)) {
-                const latestByWeight = {};
-                records.forEach(r => {
-                    if (!latestByWeight[r.weight] || new Date(r.date) > new Date(latestByWeight[r.weight].date)) {
-                        latestByWeight[r.weight] = r;
-                    }
-                });
-
-                for (const record of Object.values(latestByWeight)) {
-                    if (record.sets >= 3 && record.reps >= 12) {
-                        readyCount++;
-                        break;
-                    }
-                }
-            }
-
-            document.getElementById('readyToProgress').textContent = readyCount;
-
-            // Recent workouts
-            const recent = workouts.slice(-5).reverse();
-            const recentHtml = recent.length === 0 
-                ? '<div class="empty-state"><div class="empty-state-icon">📋</div><p>Нет тренировок. Начните сейчас!</p></div>'
-                : recent.map(w => `
-                    <div style="padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;">
-                        <div><strong>${w.name}</strong><br><span style="color: var(--text-secondary);">${w.weight}кг, ${w.sets}x${w.reps}</span></div>
-                        <div style="text-align: right; color: var(--text-secondary);">${new Date(w.date).toLocaleDateString('ru-RU')}</div>
+            const readyExercises = analyzeReadyForUpgrade();
+            const html = readyExercises.length === 0
+                ? '<p style="color: var(--text-secondary);">Нет упражнений, готовых к повышению</p>'
+                : readyExercises.map(ex => `
+                    <div class="weight-upgrade-alert">
+                        ⬆️ ${ex.exerciseName}: ${ex.weight}кг → Повысить до ${ex.weight + 2.5}кг
                     </div>
                 `).join('');
-            document.getElementById('recentWorkouts').innerHTML = recentHtml;
-
-            updateTodayWorkout();
+            document.getElementById('readyForUpgrade').innerHTML = html;
         }
 
-        function updateTodayWorkout() {
-            const today = new Date().toISOString().split('T')[0];
-            const todayWorkouts = workouts.filter(w => w.date === today);
+        function analyzeReadyForUpgrade() {
+            const result = [];
+            const exerciseHistory = {};
 
-            if (todayWorkouts.length === 0) {
-                document.getElementById('todayTableBody').innerHTML = 
-                    '<tr><td colspan="6" class="empty-state">Упражнений не добавлено</td></tr>';
-                return;
-            }
-
-            const tbody = document.getElementById('todayTableBody');
-            tbody.innerHTML = todayWorkouts.map(w => {
-                const status = getStatus(w.sets, w.reps);
-                const statusClass = status.class;
-                const statusText = status.text;
-
-                return `
-                    <tr>
-                        <td><strong>${w.name}</strong></td>
-                        <td>${w.weight} кг</td>
-                        <td>${w.sets}</td>
-                        <td>${w.reps}</td>
-                        <td><span class="progress-badge ${statusClass}">${statusText}</span></td>
-                        <td>
-                            <button class="btn btn-danger btn-small" onclick="deleteWorkout(${w.id})">Удалить</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function getStatus(sets, reps) {
-            if (sets >= 3 && reps >= 12) {
-                return { class: 'status-excellent', text: '✅ Отлично' };
-            } else if (sets >= 2 && reps >= 12) {
-                return { class: 'status-good', text: '⚠️ Хорошо' };
-            } else {
-                return { class: 'status-poor', text: '❌ Нужно работать' };
-            }
-        }
-
-        function updateWorkoutsTable() {
-            if (workouts.length === 0) {
-                document.getElementById('allWorkoutsBody').innerHTML = 
-                    '<tr><td colspan="8" class="empty-state">Тренировок не найдено</td></tr>';
-                return;
-            }
-
-            const exerciseMap = {};
-            workouts.forEach(w => {
-                if (!exerciseMap[w.name]) {
-                    exerciseMap[w.name] = [];
+            sessions.forEach(session => {
+                if (session.exercises) {
+                    session.exercises.forEach(ex => {
+                        const key = `${ex.name}_${ex.weight}`;
+                        if (!exerciseHistory[key]) {
+                            exerciseHistory[key] = [];
+                        }
+                        exerciseHistory[key].push({
+                            date: session.date,
+                            difficulty: ex.difficulty
+                        });
+                    });
                 }
-                exerciseMap[w.name].push(w);
             });
 
-            let html = '';
-
-            for (const [name, records] of Object.entries(exerciseMap)) {
-                records.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                const latestByWeight = {};
-                records.forEach(r => {
-                    if (!latestByWeight[r.weight]) {
-                        latestByWeight[r.weight] = [];
-                    }
-                    latestByWeight[r.weight].push(r);
-                });
-
-                for (const [weight, recs] of Object.entries(latestByWeight)) {
-                    const latest = recs[0];
-                    const status = getStatus(latest.sets, latest.reps);
-                    const isReady = latest.sets >= 3 && latest.reps >= 12;
-                    const progression = isReady ? '➡️ Повысить вес' : '';
-
-                    html += `
-                        <tr>
-                            <td>${new Date(latest.date).toLocaleDateString('ru-RU')}</td>
-                            <td><strong>${name}</strong></td>
-                            <td>${weight} кг</td>
-                            <td>${latest.sets}x${latest.reps}</td>
-                            <td>${(latest.volume).toFixed(0)} кг</td>
-                            <td><span class="progress-badge ${status.class}">${status.text}</span></td>
-                            <td style="color: ${isReady ? 'var(--success)' : 'var(--text-secondary)'}">${progression}</td>
-                            <td>
-                                <button class="btn btn-danger btn-small" onclick="deleteWorkout(${latest.id})">X</button>
-                            </td>
-                        </tr>
-                    `;
+            for (const key in exerciseHistory) {
+                const history = exerciseHistory[key].sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (history.length >= 2 && history[0].difficulty === 'easy' && history[1].difficulty === 'easy') {
+                    const [name, weight] = key.split('_');
+                    result.push({
+                        exerciseName: name,
+                        weight: parseFloat(weight)
+                    });
                 }
             }
 
-            document.getElementById('allWorkoutsBody').innerHTML = html;
+            return result;
         }
 
-        function updateProgressTab() {
-            const exerciseNames = [...new Set(workouts.map(w => w.name))];
-            const select = document.getElementById('exerciseSelect');
-            
-            select.innerHTML = '<option value="">-- Выберите упражнение --</option>' + 
-                exerciseNames.map(name => `<option value="${name}">${name}</option>`).join('');
+        function populateSelects() {
+            const select = document.getElementById('sessionTemplateSelect');
+            select.innerHTML = '<option value="">-- Выберите тренировку --</option>' +
+                templates.map((t, i) => `<option value="${i}">${t.name}</option>`).join('');
 
-            if (exerciseNames.length > 0) {
-                select.value = exerciseNames[0];
-                updateProgressChart();
-                updateExerciseStats();
+            const progressSelect = document.getElementById('progressExerciseSelect');
+            const exercises = new Set();
+            sessions.forEach(s => {
+                if (s.exercises) {
+                    s.exercises.forEach(ex => exercises.add(ex.name));
+                }
+            });
+            progressSelect.innerHTML = '<option value="">-- Выберите упражнение --</option>' +
+                Array.from(exercises).map(e => `<option value="${e}">${e}</option>`).join('');
+        }
+
+        // TEMPLATE MANAGEMENT
+        function openCreateTemplateModal() {
+            document.getElementById('createTemplateModal').classList.add('active');
+            document.getElementById('templateExercisesContainer').innerHTML = '';
+            document.getElementById('templateName').value = '';
+            addExerciseToTemplate();
+        }
+
+        function closeCreateTemplateModal() {
+            document.getElementById('createTemplateModal').classList.remove('active');
+        }
+
+        function addExerciseToTemplate() {
+            const container = document.getElementById('templateExercisesContainer');
+            const index = container.children.length;
+            const html = `
+                <div class="exercise-card">
+                    <input type="text" placeholder="Название упражнения" class="template-exercise-name" value="">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <input type="number" placeholder="Вес (кг)" class="template-exercise-weight" step="0.5" value="">
+                        <input type="number" placeholder="Подходы" class="template-exercise-sets" min="1" value="3">
+                        <input type="number" placeholder="Повторения" class="template-exercise-reps" min="1" value="12">
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function saveTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            if (!name) {
+                alert('Введите название тренировки');
+                return;
             }
+
+            const exercisesElements = document.querySelectorAll('.exercise-card');
+            const exercises = [];
+
+            exercisesElements.forEach(el => {
+                const exerciseName = el.querySelector('.template-exercise-name').value.trim();
+                const weight = parseFloat(el.querySelector('.template-exercise-weight').value);
+                const sets = parseInt(el.querySelector('.template-exercise-sets').value);
+                const reps = parseInt(el.querySelector('.template-exercise-reps').value);
+
+                if (exerciseName && weight) {
+                    exercises.push({ name: exerciseName, weight, sets, reps });
+                }
+            });
+
+            if (exercises.length === 0) {
+                alert('Добавьте хотя бы одно упражнение');
+                return;
+            }
+
+            templates.push({ name, exercises });
+            localStorage.setItem('templates', JSON.stringify(templates));
+            closeCreateTemplateModal();
+            renderTemplates();
+            populateSelects();
+            updateDashboard();
+        }
+
+        function renderTemplates() {
+            const html = templates.length === 0
+                ? '<div class="empty-state"><p>Нет шаблонов. Создайте первый!</p></div>'
+                : templates.map((t, i) => `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${t.name}</div>
+                                <p style="color: var(--text-secondary); margin-top: 4px;">${t.exercises.length} упражнений</p>
+                            </div>
+                            <button class="btn btn-danger btn-small" onclick="deleteTemplate(${i})">Удалить</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Упражнение</th>
+                                    <th>Вес</th>
+                                    <th>Подходы</th>
+                                    <th>Повторения</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${t.exercises.map(ex => `
+                                    <tr>
+                                        <td>${ex.name}</td>
+                                        <td>${ex.weight} кг</td>
+                                        <td>${ex.sets}</td>
+                                        <td>${ex.reps}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `).join('');
+            document.getElementById('templatesList').innerHTML = html;
+        }
+
+        function deleteTemplate(index) {
+            if (confirm('Удалить этот шаблон?')) {
+                templates.splice(index, 1);
+                localStorage.setItem('templates', JSON.stringify(templates));
+                renderTemplates();
+                populateSelects();
+                updateDashboard();
+            }
+        }
+
+        // SESSION MANAGEMENT
+        function loadTemplateForSession() {
+            const index = document.getElementById('sessionTemplateSelect').value;
+            if (index === '') {
+                document.getElementById('sessionContent').innerHTML = '';
+                return;
+            }
+
+            currentTemplateForSession = templates[index];
+            currentSessionData = {
+                templateIndex: index,
+                exercises: currentTemplateForSession.exercises.map(ex => ({
+                    ...ex,
+                    difficulty: 'normal'
+                }))
+            };
+
+            renderSessionForm();
+        }
+
+        function renderSessionForm() {
+            const html = `
+                <div style="margin-top: 20px;">
+                    ${currentSessionData.exercises.map((ex, i) => `
+                        <div class="exercise-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="font-size: 16px; color: var(--primary);">${ex.name}</strong>
+                                    <p style="color: var(--text-secondary); margin-top: 4px;">${ex.weight}кг | ${ex.sets}x${ex.reps}</p>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-top: 8px; font-size: 12px;">Сложность выполнения:</p>
+                            <div class="difficulty-buttons">
+                                <button class="difficulty-btn easy ${ex.difficulty === 'easy' ? 'active' : ''}" onclick="setDifficulty(${i}, 'easy')">Легко</button>
+                                <button class="difficulty-btn normal ${ex.difficulty === 'normal' ? 'active' : ''}" onclick="setDifficulty(${i}, 'normal')">Нормально</button>
+                                <button class="difficulty-btn hard ${ex.difficulty === 'hard' ? 'active' : ''}" onclick="setDifficulty(${i}, 'hard')">Сложно</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="openSaveSessionModal()">Сохранить сессию</button>
+                </div>
+            `;
+            document.getElementById('sessionContent').innerHTML = html;
+        }
+
+        function setDifficulty(index, difficulty) {
+            currentSessionData.exercises[index].difficulty = difficulty;
+            renderSessionForm();
+        }
+
+        function openSaveSessionModal() {
+            document.getElementById('saveSessionModal').classList.add('active');
+        }
+
+        function closeSaveSessionModal() {
+            document.getElementById('saveSessionModal').classList.remove('active');
+        }
+
+        function saveSession() {
+            const date = document.getElementById('sessionDate').value;
+            if (!date) {
+                alert('Выберите дату');
+                return;
+            }
+
+            const session = {
+                id: Date.now(),
+                date,
+                templateName: currentTemplateForSession.name,
+                exercises: currentSessionData.exercises
+            };
+
+            sessions.push(session);
+            localStorage.setItem('sessions', JSON.stringify(sessions));
+            closeSaveSessionModal();
+            document.getElementById('sessionTemplateSelect').value = '';
+            document.getElementById('sessionContent').innerHTML = '';
+            populateSelects();
+            updateDashboard();
+            alert('✅ Сессия сохранена!');
+        }
+
+        // PROGRESS
+        function updateProgressTab() {
+            populateSelects();
         }
 
         function updateProgressChart() {
-            const exerciseName = document.getElementById('exerciseSelect').value;
+            const exerciseName = document.getElementById('progressExerciseSelect').value;
             if (!exerciseName) return;
 
-            const records = workouts
-                .filter(w => w.name === exerciseName)
-                .sort((a, b) => new Date(a.date) - new Date(b.date));
+            const records = [];
+            sessions.forEach(session => {
+                const ex = session.exercises.find(e => e.name === exerciseName);
+                if (ex) {
+                    records.push({
+                        date: session.date,
+                        weight: ex.weight,
+                        difficulty: ex.difficulty
+                    });
+                }
+            });
 
             if (records.length === 0) return;
 
+            records.sort((a, b) => new Date(a.date) - new Date(b.date));
+
             const ctx = document.getElementById('progressChart').getContext('2d');
-            
-            // Group by weight
-            const byWeight = {};
-            records.forEach(r => {
-                if (!byWeight[r.weight]) byWeight[r.weight] = [];
-                byWeight[r.weight].push(r);
-            });
-
-            const labels = [];
-            const weightData = [];
-            const volumeData = [];
-
-            for (const [weight, recs] of Object.entries(byWeight)) {
-                labels.push(`${weight}кг`);
-                weightData.push(parseFloat(weight));
-                const totalVolume = recs.reduce((sum, r) => sum + r.volume, 0);
-                volumeData.push(totalVolume);
-            }
-
             if (window.progressChartInstance) {
                 window.progressChartInstance.destroy();
             }
 
+            const labels = records.map((r, i) => `${i + 1}`);
+            const weights = records.map(r => r.weight);
+            const colors = records.map(r => {
+                if (r.difficulty === 'easy') return 'var(--success)';
+                if (r.difficulty === 'hard') return 'var(--danger)';
+                return 'var(--warning)';
+            });
+
             window.progressChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Вес (кг)',
-                            data: weightData,
-                            borderColor: 'var(--primary)',
-                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Общий объём (кг)',
-                            data: volumeData,
-                            borderColor: 'var(--warning)',
-                            backgroundColor: 'rgba(255, 165, 2, 0.1)',
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
-                    ]
+                    labels,
+                    datasets: [{
+                        label: 'Вес (кг)',
+                        data: weights,
+                        borderColor: 'var(--primary)',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
                     scales: {
                         y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'Вес (кг)', color: 'var(--text)' },
+                            beginAtZero: false,
                             ticks: { color: 'var(--text-secondary)' },
                             grid: { color: 'var(--border)' }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: { display: true, text: 'Объём (кг)', color: 'var(--text)' },
-                            ticks: { color: 'var(--text-secondary)' },
-                            grid: { drawOnChartArea: false }
                         },
                         x: {
                             ticks: { color: 'var(--text-secondary)' },
@@ -1038,63 +889,15 @@
             });
         }
 
-        function updateExerciseStats() {
-            const exerciseName = document.getElementById('exerciseSelect').value;
-            if (!exerciseName) return;
-
-            const records = workouts.filter(w => w.name === exerciseName);
-            
-            const weights = [...new Set(records.map(w => w.weight))].sort((a, b) => b - a);
-            const stats = weights.map(w => {
-                const recs = records.filter(r => r.weight === w);
-                const latest = recs[recs.length - 1];
-                const maxReps = Math.max(...recs.map(r => r.reps));
-                const totalSets = recs.reduce((sum, r) => sum + r.sets, 0);
-                
-                return {
-                    weight: w,
-                    sets: latest.sets,
-                    reps: latest.reps,
-                    maxReps: maxReps,
-                    totalSets: totalSets,
-                    status: getStatus(latest.sets, latest.reps)
-                };
-            });
-
-            const html = stats.map(s => `
-                <div style="padding: 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong style="font-size: 16px; color: var(--primary);">${s.weight} кг</strong>
-                            <p style="color: var(--text-secondary); margin: 4px 0;">
-                                Текущий результат: ${s.sets}x${s.reps} | Макс. повторений: ${s.maxReps}
-                            </p>
-                        </div>
-                        <span class="progress-badge ${s.status.class}">${s.status.text}</span>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('exerciseStats').innerHTML = html;
-        }
-
-        function deleteWorkout(id) {
-            if (confirm('Удалить эту тренировку?')) {
-                workouts = workouts.filter(w => w.id !== id);
-                localStorage.setItem('workouts', JSON.stringify(workouts));
-                updateDashboard();
-                updateWorkoutsTable();
-            }
-        }
-
         // Modal close on background click
-        document.getElementById('addWorkoutModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAddWorkoutModal();
-            }
+        document.getElementById('createTemplateModal').addEventListener('click', function(e) {
+            if (e.target === this) closeCreateTemplateModal();
         });
 
-        // Initialize
+        document.getElementById('saveSessionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeSaveSessionModal();
+        });
+
         initApp();
     </script>
 </body>
